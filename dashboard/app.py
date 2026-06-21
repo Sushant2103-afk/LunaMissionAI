@@ -1,31 +1,58 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
+
 from src.ice_engine import IceEngine
-st.caption(
-    "Bharatiya Antariksh Hackathon • LunaMission AI v0.1"
-)
+
+# -----------------------------
+# Page Configuration
+# -----------------------------
+
 st.set_page_config(
     page_title="LunaMission AI",
     layout="wide"
 )
 
 st.title("🌙 LunaMission AI")
+st.subheader("AI Assisted Lunar Mission Decision Support System")
+st.caption("Bharatiya Antariksh Hackathon • LunaMission AI v0.1")
 
-st.subheader(
-    "AI Assisted Lunar Mission Decision Support System"
-)
+# -----------------------------
+# Load Data
+# -----------------------------
 
 df = pd.read_csv("data/sample/sample_lunar_data.csv")
-engine = IceEngine(df)
 
+# -----------------------------
+# Ice Confidence Engine
+# -----------------------------
+
+engine = IceEngine(df)
 df = engine.calculate()
 
-st.markdown("🛰️ Candidate Lunar Regions")
+# -----------------------------
+# Sort Regions by Ice Score
+# -----------------------------
+
+ranking = df.sort_values(
+    by="IceScore",
+    ascending=False
+)
+
+# -----------------------------
+# Display Dataset
+# -----------------------------
+
+st.markdown("## 🛰️ Candidate Lunar Regions")
 
 st.dataframe(
     df,
     use_container_width=True
 )
+
+# -----------------------------
+# Metrics
+# -----------------------------
 
 st.markdown("---")
 
@@ -46,14 +73,75 @@ c3.metric(
     df["DOP"].min()
 )
 
-st.markdown("## 🧊 Ice Confidence Ranking")
+# -----------------------------
+# Ice Confidence Ranking
+# -----------------------------
 
-ranking = df.sort_values(
-    by="IceScore",
-    ascending=False
-)
+st.markdown("---")
+st.markdown("## 🧊 Ice Confidence Ranking")
 
 st.dataframe(
     ranking,
     use_container_width=True
+)
+
+# -----------------------------
+# Bar Chart
+# -----------------------------
+
+st.markdown("---")
+st.markdown("## 📊 Ice Confidence Visualization")
+
+fig = px.bar(
+    ranking,
+    x="Region",
+    y="IceScore",
+    color="Confidence",
+    text="IceScore",
+    title="Ice Confidence by Region"
+)
+
+fig.update_layout(
+    xaxis_title="Region",
+    yaxis_title="Ice Score"
+)
+
+st.plotly_chart(
+    fig,
+    use_container_width=True
+)
+
+# -----------------------------
+# Best Candidate
+# -----------------------------
+
+st.markdown("---")
+st.markdown("## ⭐ Best Candidate Region")
+
+best = ranking.iloc[0]
+
+col1, col2 = st.columns(2)
+
+col1.metric(
+    "Region",
+    best["Region"]
+)
+
+col2.metric(
+    "Ice Score",
+    best["IceScore"]
+)
+
+st.success(
+    f"""
+### Recommended Target
+
+**Confidence:** {best["Confidence"]}
+
+**CPR:** {best["CPR"]}
+
+**DOP:** {best["DOP"]}
+
+**Slope:** {best["Slope"]}°
+"""
 )

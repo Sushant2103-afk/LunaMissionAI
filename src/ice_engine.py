@@ -59,13 +59,13 @@ class IceEngine:
 
             # Confidence Label
             if score >= 90:
-                labels.append("🟢 High")
+                labels.append("High")
 
             elif score >= 70:
-                labels.append("🟡 Medium")
+                labels.append("Medium")
 
             else:
-                labels.append("🔴 Low")
+                labels.append("Low")
 
         self.df["IceScore"] = scores
         self.df["Confidence"] = labels
