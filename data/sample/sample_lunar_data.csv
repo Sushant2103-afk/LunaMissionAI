@@ -1,0 +1,9 @@
+Region,Latitude,Longitude,CPR,DOP,Slope
+Faustini_A,-89.12,45.32,1.20,0.08,4
+Faustini_B,-89.18,45.60,0.82,0.30,12
+Faustini_C,-89.25,45.91,1.45,0.05,2
+Faustini_D,-89.40,46.12,1.08,0.10,7
+Faustini_E,-89.51,46.35,0.71,0.22,15
+Faustini_F,-89.60,46.50,1.31,0.09,5
+Faustini_G,-89.75,46.80,0.95,0.18,9
+Faustini_H,-89.82,47.02,1.55,0.04,3
