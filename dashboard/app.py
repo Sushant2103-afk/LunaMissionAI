@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
-
+from src.ice_engine import IceEngine
+st.caption(
+    "Bharatiya Antariksh Hackathon • LunaMission AI v0.1"
+)
 st.set_page_config(
     page_title="LunaMission AI",
     layout="wide"
@@ -13,8 +16,11 @@ st.subheader(
 )
 
 df = pd.read_csv("data/sample/sample_lunar_data.csv")
+engine = IceEngine(df)
 
-st.markdown("## Lunar Regions")
+df = engine.calculate()
+
+st.markdown("🛰️ Candidate Lunar Regions")
 
 st.dataframe(
     df,
@@ -38,4 +44,16 @@ c2.metric(
 c3.metric(
     "Lowest DOP",
     df["DOP"].min()
+)
+
+st.markdown("## 🧊 Ice Confidence Ranking")
+
+ranking = df.sort_values(
+    by="IceScore",
+    ascending=False
+)
+
+st.dataframe(
+    ranking,
+    use_container_width=True
 )
