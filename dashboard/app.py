@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 
 from src.ice_engine import IceEngine
-
+from src.landing_engine import LandingEngine
 # -----------------------------
 # Page Configuration
 # -----------------------------
@@ -30,6 +30,8 @@ df = pd.read_csv("data/sample/sample_lunar_data.csv")
 engine = IceEngine(df)
 df = engine.calculate()
 
+landing = LandingEngine(df)
+df = landing.calculate()
 # -----------------------------
 # Sort Regions by Ice Score
 # -----------------------------
@@ -144,4 +146,50 @@ st.success(
 
 **Slope:** {best["Slope"]}°
 """
+)
+st.markdown("---")
+
+st.markdown("## 🚀 Landing Site Ranking")
+
+landing_rank = df.sort_values(
+    by="LandingScore",
+    ascending=False
+)
+
+st.dataframe(
+    landing_rank[
+        [
+            "Region",
+            "IceScore",
+            "LandingScore",
+            "Slope"
+        ]
+    ],
+    use_container_width=True
+)
+
+landing_fig = px.scatter(
+
+    landing_rank,
+
+    x="Slope",
+
+    y="LandingScore",
+
+    size="IceScore",
+
+    color="LandingScore",
+
+    hover_name="Region",
+
+    title="Landing Site Analysis"
+
+)
+
+st.plotly_chart(
+
+    landing_fig,
+
+    use_container_width=True
+
 )
