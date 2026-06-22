@@ -4,6 +4,7 @@ import plotly.express as px
 
 from src.ice_engine import IceEngine
 from src.landing_engine import LandingEngine
+from src.rover_engine import RoverEngine
 # -----------------------------
 # Page Configuration
 # -----------------------------
@@ -32,6 +33,10 @@ df = engine.calculate()
 
 landing = LandingEngine(df)
 df = landing.calculate()
+
+rover = RoverEngine(df)
+
+df = rover.calculate()
 # -----------------------------
 # Sort Regions by Ice Score
 # -----------------------------
@@ -189,6 +194,52 @@ landing_fig = px.scatter(
 st.plotly_chart(
 
     landing_fig,
+
+    use_container_width=True
+
+)
+
+st.markdown("---")
+st.markdown("## 🤖 Rover Traverse Planning")
+
+rover_rank = df.sort_values(
+    by="LandingScore",
+    ascending=False
+)
+
+st.dataframe(
+    rover_rank[
+        [
+            "Region",
+            "TraverseDistance",
+            "EnergyCost",
+            "TraverseRisk"
+        ]
+    ],
+    use_container_width=True
+)
+
+rover_fig = px.scatter(
+
+    rover_rank,
+
+    x="TraverseDistance",
+
+    y="EnergyCost",
+
+    color="TraverseRisk",
+
+    size="LandingScore",
+
+    hover_name="Region",
+
+    title="Rover Traverse Analysis"
+
+)
+
+st.plotly_chart(
+
+    rover_fig,
 
     use_container_width=True
 
