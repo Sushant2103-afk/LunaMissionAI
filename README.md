@@ -1,26 +1,27 @@
-# LunaMission AI
-
-## Bharatiya Antariksh Hackathon
+🌙 LunaMission AI
 
 AI Assisted Lunar Mission Decision Support System
 
-### Features
+Features
 
-- Ice Confidence Mapping
-- Landing Site Recommendation
-- Rover Traverse Planning
-- Ice Volume Estimation
-- AI Mission Report
+✅ Ice Confidence Mapping
 
-### Team
+✅ Landing Site Optimization
 
-4 Members
+✅ Rover Traverse Planning
 
-### Tech Stack
+✅ Mission Decision Engine
+
+Tech Stack
 
 Python
+
 Streamlit
-NumPy
-Pandas
+
 Plotly
-NetworkX
+
+Pandas
+
+Future Scope
+
+Integration with real Chandrayaan-2 DFSAR data
