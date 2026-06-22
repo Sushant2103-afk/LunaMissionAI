@@ -5,6 +5,7 @@ import plotly.express as px
 from src.ice_engine import IceEngine
 from src.landing_engine import LandingEngine
 from src.rover_engine import RoverEngine
+from src.mission_engine import MissionEngine
 # -----------------------------
 # Page Configuration
 # -----------------------------
@@ -38,6 +39,75 @@ rover = RoverEngine(df)
 
 df = rover.calculate()
 # -----------------------------
+# Mission Decision Engine
+# -----------------------------
+
+mission = MissionEngine(df)
+
+df = mission.calculate()
+best = df.iloc[0]
+
+st.success(
+    f"""
+# 🛰 Mission Status : READY
+
+## Recommended Landing Site
+
+### {best["Region"]}
+
+Mission Score : {best["MissionScore"]}
+
+Ice Confidence : {best["Confidence"]}
+
+Landing Score : {best["LandingScore"]}
+
+Traverse Risk : {best["TraverseRisk"]}
+
+"""
+)
+st.markdown("## 📊 Mission Overview")
+
+c1, c2, c3, c4 = st.columns(4)
+
+c1.metric(
+    "🏆 Best Site",
+    best["Region"]
+)
+
+c2.metric(
+    "🧊 Ice Score",
+    best["IceScore"]
+)
+
+c3.metric(
+    "🚀 Landing",
+    round(best["LandingScore"], 1)
+)
+
+c4.metric(
+    "🎯 Mission",
+    round(best["MissionScore"], 1)
+)
+st.markdown("---")
+
+st.markdown("## 🛰 Final Mission Ranking")
+
+st.dataframe(
+
+    df[
+        [
+            "Region",
+            "MissionScore",
+            "IceScore",
+            "LandingScore",
+            "TraverseRisk"
+        ]
+    ],
+
+    use_container_width=True
+
+)
+# -----------------------------
 # Sort Regions by Ice Score
 # -----------------------------
 
@@ -46,16 +116,6 @@ ranking = df.sort_values(
     ascending=False
 )
 
-# -----------------------------
-# Display Dataset
-# -----------------------------
-
-st.markdown("## 🛰️ Candidate Lunar Regions")
-
-st.dataframe(
-    df,
-    use_container_width=True
-)
 
 # -----------------------------
 # Metrics
@@ -118,40 +178,7 @@ st.plotly_chart(
     use_container_width=True
 )
 
-# -----------------------------
-# Best Candidate
-# -----------------------------
 
-st.markdown("---")
-st.markdown("## ⭐ Best Candidate Region")
-
-best = ranking.iloc[0]
-
-col1, col2 = st.columns(2)
-
-col1.metric(
-    "Region",
-    best["Region"]
-)
-
-col2.metric(
-    "Ice Score",
-    best["IceScore"]
-)
-
-st.success(
-    f"""
-### Recommended Target
-
-**Confidence:** {best["Confidence"]}
-
-**CPR:** {best["CPR"]}
-
-**DOP:** {best["DOP"]}
-
-**Slope:** {best["Slope"]}°
-"""
-)
 st.markdown("---")
 
 st.markdown("## 🚀 Landing Site Ranking")
@@ -198,7 +225,6 @@ st.plotly_chart(
     use_container_width=True
 
 )
-
 st.markdown("---")
 st.markdown("## 🤖 Rover Traverse Planning")
 
@@ -243,4 +269,49 @@ st.plotly_chart(
 
     use_container_width=True
 
+)
+# -----------------------------
+# Best Candidate
+# -----------------------------
+
+st.markdown("---")
+st.markdown("## ⭐ Best Candidate Region")
+
+best = ranking.iloc[0]
+
+col1, col2 = st.columns(2)
+
+col1.metric(
+    "Region",
+    best["Region"]
+)
+
+col2.metric(
+    "Ice Score",
+    best["IceScore"]
+)
+
+st.success(
+    f"""
+### Recommended Target
+
+**Confidence:** {best["Confidence"]}
+
+**CPR:** {best["CPR"]}
+
+**DOP:** {best["DOP"]}
+
+**Slope:** {best["Slope"]}°
+"""
+)
+
+# -----------------------------
+# Display Dataset
+# -----------------------------
+
+st.markdown("## 🛰️ Candidate Lunar Regions")
+
+st.dataframe(
+    df,
+    use_container_width=True
 )
