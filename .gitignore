@@ -216,3 +216,25 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+# Large datasets
+
+data/sri/*
+!data/sri/.gitkeep
+
+data/gri/*
+!data/gri/.gitkeep
+
+data/sli/*
+!data/sli/.gitkeep
+
+data/geometry/*
+!data/geometry/.gitkeep
+
+*.zip
+*.tif
+*.tiff
+*.prd
+*.obs
+*.xml
