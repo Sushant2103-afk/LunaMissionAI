@@ -1,11 +1,12 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-
+from src.data_fusion import DataFusion
 from src.ice_engine import IceEngine
 from src.landing_engine import LandingEngine
 from src.rover_engine import RoverEngine
 from src.mission_engine import MissionEngine
+from src.terrain_engine import TerrainEngine
 # -----------------------------
 # Page Configuration
 # -----------------------------
@@ -19,11 +20,17 @@ st.title("🌙 LunaMission AI")
 st.subheader("AI Assisted Lunar Mission Decision Support System")
 st.caption("Bharatiya Antariksh Hackathon • LunaMission AI v0.1")
 
+from pathlib import Path
+
+print(Path("data/sample/sample_lunar_data.csv").resolve())
+print(Path("data/sample/sample_terrain_data.csv").resolve())
 # -----------------------------
 # Load Data
 # -----------------------------
 
-df = pd.read_csv("data/sample/sample_lunar_data.csv")
+df = DataFusion.load()
+print(df.columns.tolist())
+print(df.head())
 
 # -----------------------------
 # Ice Confidence Engine
@@ -31,6 +38,9 @@ df = pd.read_csv("data/sample/sample_lunar_data.csv")
 
 engine = IceEngine(df)
 df = engine.calculate()
+
+terrain = TerrainEngine(df)
+df = terrain.calculate()
 
 landing = LandingEngine(df)
 df = landing.calculate()
@@ -104,7 +114,7 @@ st.dataframe(
         ]
     ],
 
-    use_container_width=True
+    width="stretch"
 
 )
 # -----------------------------
@@ -149,7 +159,7 @@ st.markdown("## 🧊 Ice Confidence Ranking")
 
 st.dataframe(
     ranking,
-    use_container_width=True
+    width="stretch"
 )
 
 # -----------------------------
@@ -175,7 +185,7 @@ fig.update_layout(
 
 st.plotly_chart(
     fig,
-    use_container_width=True
+    width="stretch"
 )
 
 
@@ -197,7 +207,7 @@ st.dataframe(
             "Slope"
         ]
     ],
-    use_container_width=True
+    width="stretch"
 )
 
 landing_fig = px.scatter(
@@ -222,7 +232,7 @@ st.plotly_chart(
 
     landing_fig,
 
-    use_container_width=True
+    width="stretch"
 
 )
 st.markdown("---")
@@ -242,7 +252,7 @@ st.dataframe(
             "TraverseRisk"
         ]
     ],
-    use_container_width=True
+    width="stretch"
 )
 
 rover_fig = px.scatter(
@@ -267,7 +277,7 @@ st.plotly_chart(
 
     rover_fig,
 
-    use_container_width=True
+    width="stretch"
 
 )
 # -----------------------------
@@ -313,5 +323,5 @@ st.markdown("## 🛰️ Candidate Lunar Regions")
 
 st.dataframe(
     df,
-    use_container_width=True
+    width="stretch"
 )
